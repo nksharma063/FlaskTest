@@ -1,0 +1,26 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag FlaskTest:$(date +%s)
+    - name: Tag Your Image
+      run: docker tag FlaskTest nksharma063@gmail.com/FlasTest:1.0 
+    - name: docker login
+      run: docker login
+    - name: docker push
+      run: docker push nksharma063@gmail.com/FlaskTest:1.0
+      
+    
