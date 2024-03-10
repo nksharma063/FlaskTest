@@ -28,7 +28,7 @@ jobs:
         continue-on-error: false
       - name: Docker login
         run: docker login
-        if: ${{ success() }}
+        continue-on-error: false
       - name: Docker push
         run: docker push nksharma063@gmail.com/FlaskTest:1.0
         continue-on-error: false
