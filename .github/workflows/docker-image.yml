@@ -7,20 +7,28 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag FlaskTest:$(date +%s)
-    - name: Tag Your Image
-      run: docker tag FlaskTest nksharma063@gmail.com/FlasTest:1.0 
-    - name: docker login
-      run: docker login
-    - name: docker push
-      run: docker push nksharma063@gmail.com/FlaskTest:1.0
-      
-    
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run pytest
+        run: pytest
+        continue-on-error: false
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag FlaskTest:$(date +%s)
+        continue-on-error: false
+      - name: Tag Your Image
+        run: docker tag FlaskTest nksharma063@gmail.com/FlasTest:1.0
+        continue-on-error: false
+      - name: Docker login
+        run: docker login
+        if: ${{ success() }}
+      - name: Docker push
+        run: docker push nksharma063@gmail.com/FlaskTest:1.0
+        continue-on-error: false
